@@ -5,12 +5,8 @@ import com.leetcode.api.model.Question;
 import com.leetcode.api.service.DailyChallengeService;
 import com.leetcode.api.service.RandomQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -31,7 +27,7 @@ public class LeetcodeController {
     }
 
     @GetMapping(path = "/random-question/{difficulty}", produces = "application/json")
-    public ResponseEntity<Question> fetchRandomQuestion(@PathVariable("difficulty")Difficulty difficulty) {
+    public ResponseEntity<Question> fetchRandomQuestion(@PathVariable("difficulty") Difficulty difficulty) {
         return randomQuestionService
                 .fetchRandomQuestion(difficulty)
                 .map(ResponseEntity::ok)
