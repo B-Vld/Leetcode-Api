@@ -1,16 +1,14 @@
 package com.leetcode.api.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.leetcode.api.exception.DifficultyException;
 
-@Getter
+import java.util.Locale;
+
 public enum Difficulty {
 
-    @JsonProperty("EASY")
     EASY("EASY"),
-    @JsonProperty("MEDIUM")
     MEDIUM("MEDIUM"),
-    @JsonProperty("HARD")
     HARD("HARD");
 
     private final String difficulty;
@@ -19,4 +17,22 @@ public enum Difficulty {
         this.difficulty = difficulty;
     }
 
+    public static Difficulty of(String str) {
+        if (null == str || str.isEmpty()) {
+            return null;
+        } else {
+            var strUpper = str.toUpperCase(Locale.ROOT);
+            for (var item : Difficulty.values()) {
+                if (strUpper.equals(item.getDifficulty())) {
+                    return item;
+                }
+            }
+        }
+        throw new DifficultyException(String.format("%s is not a difficulty option.", str));
+    }
+
+    @JsonValue
+    public String getDifficulty() {
+        return difficulty;
+    }
 }

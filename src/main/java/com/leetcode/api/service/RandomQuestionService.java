@@ -1,7 +1,6 @@
 package com.leetcode.api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leetcode.api.constants.Constants;
 import com.leetcode.api.model.Difficulty;
@@ -11,44 +10,46 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class DailyChallengeService {
+public class RandomQuestionService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DailyChallengeService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RandomQuestionService.class);
 
     @Autowired
     private ResponseFetcherService responseFetcherService;
 
-    public Optional<Question> fetchDailyChallenge() {
-        var response = responseFetcherService.fetchResponse(Constants.QUERY_QUESTION_OF_TODAY);
+    public Optional<Question> fetchRandomQuestion(Difficulty difficulty) {
+        var response = responseFetcherService.fetchResponse(Constants.QUERY_RANDOM_PROBLEM(difficulty));
         if (response.isPresent()) {
-            return toDailyQuestion(response.get());
+            return toRandomQuestion(response.get(), difficulty);
         }
         return Optional.empty();
     }
 
-    private Optional<Question> toDailyQuestion(String response) {
+    private Optional<Question> toRandomQuestion(String response, Difficulty difficulty) {
         LOGGER.info("Mapping the response : {} to json", response);
         var mapper = new ObjectMapper();
         try {
             var jsonRootNode = mapper.readTree(response);
             var jsonDataNode = jsonRootNode.get("data");
-            var jsonDCQNode = jsonDataNode.get("activeDailyCodingChallengeQuestion");
-            var jsonQuestionNode = jsonDCQNode.get("question");
-            var jsonTopicTags = jsonQuestionNode.get("topicTags");
+            var jsonRQ = jsonDataNode.get("randomQuestion");
+            var jsonTopicTags = jsonRQ.get("topicTags");
 
-            var questionId = jsonQuestionNode.get("questionId").asText();
-            var date = jsonDCQNode.get("date").asText();
-            var link = Constants.LEETCODE_BASE_URL + jsonDCQNode.get("link").asText();
-            var acceptanceRate = jsonQuestionNode.get("acRate").asText();
-            var difficulty = Difficulty.valueOf(jsonQuestionNode.get("difficulty").asText().toUpperCase(Locale.ROOT));
-            var title = jsonQuestionNode.get("title").asText();
-            var likes = Integer.valueOf(jsonQuestionNode.get("likes").asText());
-            var dislikes = Integer.valueOf(jsonQuestionNode.get("dislikes").asText());
+            var title = jsonRQ.get("title").asText();
+            var questionId = jsonRQ.get("questionId").asText();
+            var likes = Integer.valueOf(jsonRQ.get("likes").asText());
+            var dislikes = Integer.valueOf(jsonRQ.get("dislikes").asText());
+            var submitUrl = Constants.LEETCODE_BASE_URL + jsonRQ.get("submitUrl").asText();
+            var link = submitUrl.substring(0, submitUrl.length() - 7);
+            var acceptanceRate = jsonRQ.get("acRate").asText();
+            var dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            var date = dateFormat.format(new Date());
+
             var topicTags = new ArrayList<String>();
 
             for (var node : jsonTopicTags) {
@@ -74,5 +75,6 @@ public class DailyChallengeService {
         }
         return Optional.empty();
     }
+
 
 }
