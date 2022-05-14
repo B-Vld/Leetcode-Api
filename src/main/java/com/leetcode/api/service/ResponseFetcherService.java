@@ -22,7 +22,7 @@ public class ResponseFetcherService {
     private OkHttpClient httpClient;
 
     public Optional<String> fetchResponse(String query) {
-        LOGGER.info("Sending a POST request to {} with the following query {} ", Constants.LEETCODE_GRAPHQL_URL, query);
+        LOGGER.info("Sending a POST request to : {} with the following query : {} ", Constants.LEETCODE_GRAPHQL_URL, query);
         var body = RequestBody.create(query, MediaType.parse(Constants.JSON));
         var request = new Request.Builder()
                 .url(Constants.LEETCODE_GRAPHQL_URL)
