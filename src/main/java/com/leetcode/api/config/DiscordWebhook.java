@@ -26,7 +26,7 @@ public class DiscordWebhook {
     @Autowired
     private DailyChallengeService dailyChallengeService;
 
-    @Scheduled(cron = "0 55 13 * * *")
+    @Scheduled(cron = "0 0 14 * * *")
     public void sendWebhookRequest() throws IOException {
         var maybeDailyChallenge = dailyChallengeService.fetchDailyChallenge();
         if (maybeDailyChallenge.isPresent()) {
