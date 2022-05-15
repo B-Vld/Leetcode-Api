@@ -9,6 +9,8 @@ public final class Constants {
     public static final String LEETCODE_PROBLEMSETS = "https://leetcode.com/problemset/all/";
     public static final String JSON = "application/json";
     public static final String QUERY_QUESTION_OF_TODAY = "{\"query\":\"query questionOfToday { activeDailyCodingChallengeQuestion {date link question {acRate questionId likes dislikes difficulty title topicTags { name } } } } \",\"variables\":{}}";
+    public static final String WEBHOOK_URL = System.getenv().get("WEBHOOK_URL");
+    public static final String USER_AGENT = System.getenv().get("USER_AGENT");
 
     private Constants() {
     }
