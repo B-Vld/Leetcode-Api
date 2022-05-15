@@ -2,6 +2,7 @@ package com.leetcode.api.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Getter
 @Jacksonized
 @Builder
+@ToString
 public class Question {
 
     private final String questionId;
