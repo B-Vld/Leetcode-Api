@@ -1,6 +1,6 @@
 # Leetcode-Api
 
-Leetcode problem fetcher using graphql queries
+Leetcode problem fetcher using graphql queries with discord webhook integration.
 
 ## Example Requests
 
