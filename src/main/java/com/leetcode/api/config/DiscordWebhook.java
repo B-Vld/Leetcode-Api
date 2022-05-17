@@ -2,6 +2,10 @@ package com.leetcode.api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leetcode.api.constants.Constants;
+import com.leetcode.api.model.Difficulty;
+import com.leetcode.api.model.discord.Embed;
+import com.leetcode.api.model.discord.Field;
+import com.leetcode.api.model.discord.Thumbnail;
 import com.leetcode.api.service.DailyChallengeService;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -14,6 +18,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class DiscordWebhook {
@@ -29,14 +35,31 @@ public class DiscordWebhook {
     @Scheduled(cron = "0 15 19 * * *", zone = "GMT+3")
     public void sendWebhookRequest() throws IOException {
         var maybeDailyChallenge = dailyChallengeService.fetchDailyChallenge();
+        var mapper = new ObjectMapper();
         if (maybeDailyChallenge.isPresent()) {
+
             var dailyChallenge = maybeDailyChallenge.get();
             LOGGER.info("Fetching the daily challenge {}", dailyChallenge);
 
-            var mapper = new ObjectMapper();
-            var node = mapper.createObjectNode();
-            node.put("content", "@here \n" + dailyChallenge.getLink());
-            var json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+            var fields = List.of(
+                    new Field("Difficulty", dailyChallenge.getDifficulty().name(), false),
+                    new Field("Topic Tags", dailyChallenge.getTopicTags().toString(), false),
+                    new Field("Likes", String.valueOf(dailyChallenge.getLikes()), true),
+                    new Field("Dislikes", String.valueOf(dailyChallenge.getDislikes()), true)
+            );
+
+            var embed = Embed.builder()
+                    .title(dailyChallenge.getTitle())
+                    .url(dailyChallenge.getLink())
+                    .color(Constants.EMBED_COLOR)
+                    .thumbnail(new Thumbnail(Constants.LEETCODE_THUMBNAIL_URL))
+                    .fields(fields)
+                    .build();
+
+            var embeds = new HashMap<String, List<Embed>>();
+            embeds.put("embeds", List.of(embed));
+
+            var json = mapper.writeValueAsString(embeds);
 
             var body = RequestBody.create(json, MediaType.parse(Constants.JSON));
             LOGGER.info("Creating the body for the webhook request {}", body);
