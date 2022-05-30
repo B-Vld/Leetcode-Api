@@ -1,8 +1,7 @@
-package com.leetcode.api.config;
+package com.leetcode.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leetcode.api.constants.Constants;
-import com.leetcode.api.model.Difficulty;
 import com.leetcode.api.model.discord.Embed;
 import com.leetcode.api.model.discord.Field;
 import com.leetcode.api.model.discord.Thumbnail;
@@ -15,16 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-@Component
-public class DiscordWebhook {
+@Controller
+public class DiscordWebhookController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DiscordWebhook.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiscordWebhookController.class);
 
     @Autowired
     private OkHttpClient httpClient;
@@ -33,7 +32,7 @@ public class DiscordWebhook {
     private DailyChallengeService dailyChallengeService;
 
     @Scheduled(cron = "0 15 19 * * *", zone = "GMT+3")
-    public void sendWebhookRequest() throws IOException {
+    public void sendWebhookRequest() {
         var maybeDailyChallenge = dailyChallengeService.fetchDailyChallenge();
         var mapper = new ObjectMapper();
         if (maybeDailyChallenge.isPresent()) {
@@ -59,23 +58,27 @@ public class DiscordWebhook {
             var embeds = new HashMap<String, List<Embed>>();
             embeds.put("embeds", List.of(embed));
 
-            var json = mapper.writeValueAsString(embeds);
+            try {
+                var json = mapper.writeValueAsString(embeds);
 
-            var body = RequestBody.create(json, MediaType.parse(Constants.JSON));
-            LOGGER.info("Creating the body for the webhook request {}", body);
+                var body = RequestBody.create(json, MediaType.parse(Constants.JSON));
+                LOGGER.info("Creating the body for the webhook request {}", body);
 
-            var request = new Request.Builder()
-                    .url(Constants.WEBHOOK_URL)
-                    .method("POST", body)
-                    .addHeader("referer", Constants.LEETCODE_PROBLEMSETS)
-                    .addHeader("Content-Type", Constants.JSON)
-                    .addHeader("User-Agent", Constants.USER_AGENT)
-                    .build();
+                var request = new Request.Builder()
+                        .url(Constants.WEBHOOK_URL)
+                        .method("POST", body)
+                        .addHeader("referer", Constants.LEETCODE_PROBLEMSETS)
+                        .addHeader("Content-Type", Constants.JSON)
+                        .addHeader("User-Agent", Constants.USER_AGENT)
+                        .build();
 
-            httpClient.newCall(request).execute();
-            LOGGER.info("Sending the message");
+                httpClient.newCall(request).execute();
+                LOGGER.info("Sending the message");
+
+            } catch (IOException e) {
+                LOGGER.error("Could not execute the request {0}", e);
+            }
         }
-
     }
 
 }

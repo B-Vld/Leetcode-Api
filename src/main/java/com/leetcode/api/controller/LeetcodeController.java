@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api")
 public class LeetcodeController {
@@ -27,9 +30,17 @@ public class LeetcodeController {
     }
 
     @GetMapping(path = "/random-question/{difficulty}", produces = "application/json")
-    public ResponseEntity<Question> fetchRandomQuestion(@PathVariable("difficulty") Difficulty difficulty) {
+    public ResponseEntity<Question> fetchRandomQuestionBasedOfDifficulty(@PathVariable("difficulty") Difficulty difficulty) {
         return randomQuestionService
-                .fetchRandomQuestion(difficulty)
+                .fetchRandomQuestionByDifficulty(difficulty)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping(path = "/random-question/{difficulty}", produces = "application/json")
+    public ResponseEntity<Map<Integer, Set<Question>>> fetchRandomQuestionBasedOnTopicTags(@PathVariable("difficulty") Difficulty difficulty, @RequestBody Set<String> tags) {
+        return randomQuestionService
+                .fetchRandomQuestionByTags(difficulty, tags)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

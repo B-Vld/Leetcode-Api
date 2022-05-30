@@ -48,7 +48,7 @@ public class LeetcodeControllerTest {
 
     @Test
     void random_question_test_should_have_success_status() throws Exception {
-        when(randomQuestionService.fetchRandomQuestion(Difficulty.EASY)).thenReturn(Optional.of(mockQuestion()));
+        when(randomQuestionService.fetchRandomQuestionByDifficulty(Difficulty.EASY)).thenReturn(Optional.of(mockQuestion()));
 
         MvcResult mvcResult = mockMvc.perform(get(String.format("/api/random-question/%s", Difficulty.EASY.getDifficulty())))
                 .andExpect(status().is2xxSuccessful())
