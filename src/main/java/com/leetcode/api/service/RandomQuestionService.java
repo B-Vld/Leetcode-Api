@@ -27,6 +27,9 @@ public class RandomQuestionService {
     @Autowired
     private QuestionParser questionParser;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public Optional<Question> fetchRandomQuestionByDifficulty(Difficulty difficulty) {
         var response = responseFetcherService.fetchResponse(Constants.QUERY_RANDOM_PROBLEM(difficulty));
         if (response.isPresent()) {
@@ -35,7 +38,7 @@ public class RandomQuestionService {
         return Optional.empty();
     }
 
-    public Optional<Map<Integer, Set<Question>>> fetchRandomQuestionByTags(Difficulty difficulty, Set<String> tags) {
+    public Optional<Set<Question>> fetchRandomQuestionByTags(Difficulty difficulty, Set<String> tags) {
         var response = responseFetcherService.fetchResponse(Constants.QUERY_RANDOM_PROBLEM_TAGS(difficulty, tags));
         if (response.isPresent()) {
             return toRandomQuestionsSet(response.get());
@@ -45,7 +48,6 @@ public class RandomQuestionService {
 
     private Optional<Question> toRandomQuestion(String response) {
         LOGGER.info("Mapping the response : {} to json", response);
-        var mapper = new ObjectMapper();
         try {
             var jsonRootNode = mapper.readTree(response);
             var jsonDataNode = jsonRootNode.get("data");
@@ -59,22 +61,20 @@ public class RandomQuestionService {
         return Optional.empty();
     }
 
-    private Optional<Map<Integer, Set<Question>>> toRandomQuestionsSet(String response) {
+    private Optional<Set<Question>> toRandomQuestionsSet(String response) {
         LOGGER.info("Mapping the response : {} to json", response);
-        var mapper = new ObjectMapper();
         try {
             var jsonRootNode = mapper.readTree(response);
             var jsonDataNode = jsonRootNode.get("data");
             var jsonProblemsetQuestionList = jsonDataNode.get("problemsetQuestionList");
             var jsonQuestions = jsonProblemsetQuestionList.get("questions");
 
-            var totalQuestions = jsonProblemsetQuestionList.get("total").asText();
             var questionSet = new HashSet<Question>();
             for (var questionNode : jsonQuestions) {
                 questionSet.add(questionParser.parseNodeToQuestion(questionNode));
             }
             return Optional
-                    .of(Map.of(Integer.valueOf(totalQuestions), questionSet));
+                    .of(questionSet);
 
         } catch (JsonProcessingException e) {
             LOGGER.error("Failed to map the response to json : {0}", e);

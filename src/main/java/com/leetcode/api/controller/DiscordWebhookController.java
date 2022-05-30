@@ -49,7 +49,7 @@ public class DiscordWebhookController {
 
             var embed = Embed.builder()
                     .title(dailyChallenge.getTitle())
-                    .url(dailyChallenge.getLink())
+                    .url(dailyChallenge.getSubmitUrl())
                     .color(Constants.EMBED_COLOR)
                     .thumbnail(new Thumbnail(Constants.LEETCODE_THUMBNAIL_URL))
                     .fields(fields)

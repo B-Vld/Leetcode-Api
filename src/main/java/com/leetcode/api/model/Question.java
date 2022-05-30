@@ -1,6 +1,5 @@
 package com.leetcode.api.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,18 +11,17 @@ import java.util.List;
 @Jacksonized
 @Builder
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Question {
 
     private final String questionId;
 
     private final String title;
 
-    private final String link;
+    private final String submitUrl;
 
     private final Difficulty difficulty;
 
-    private final String acceptanceRate;
+    private final String acRate;
 
     private final List<String> topicTags;
 

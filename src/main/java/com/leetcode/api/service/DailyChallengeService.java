@@ -23,6 +23,9 @@ public class DailyChallengeService {
     @Autowired
     private QuestionParser parser;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public Optional<Question> fetchDailyChallenge() {
         var response = responseFetcherService.fetchResponse(Constants.QUERY_QUESTION_OF_TODAY);
         if (response.isPresent()) {
@@ -33,7 +36,6 @@ public class DailyChallengeService {
 
     private Optional<Question> toDailyQuestion(String response) {
         LOGGER.info("Mapping the response : {} to json", response);
-        var mapper = new ObjectMapper();
         try {
             var jsonRootNode = mapper.readTree(response);
             var jsonDataNode = jsonRootNode.get("data");

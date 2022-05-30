@@ -38,7 +38,7 @@ public class LeetcodeController {
     }
 
     @PostMapping(path = "/random-question/{difficulty}", produces = "application/json")
-    public ResponseEntity<Map<Integer, Set<Question>>> fetchRandomQuestionBasedOnTopicTags(@PathVariable("difficulty") Difficulty difficulty, @RequestBody Set<String> tags) {
+    public ResponseEntity<Set<Question>> fetchRandomQuestionBasedOnTopicTags(@PathVariable("difficulty") Difficulty difficulty, @RequestBody Set<String> tags) {
         return randomQuestionService
                 .fetchRandomQuestionByTags(difficulty, tags)
                 .map(ResponseEntity::ok)
