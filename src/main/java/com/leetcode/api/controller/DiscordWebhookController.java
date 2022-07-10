@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-@Controller
+@Controller("/cron")
 public class DiscordWebhookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscordWebhookController.class);
