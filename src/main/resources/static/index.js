@@ -1,5 +1,14 @@
 const baseURI = 'https://api4leetcode.herokuapp.com/api';
 
+function getLinkBasedOnDifficulty() {
+    const form = document.forms.myForm;
+    const checked = form.querySelector('input[name=flexRadioDefault]:checked');
+    const difficulty = checked.value;
+    const link = baseURI + '/random-question/' + difficulty;
+    document.getElementById('randomProblemLink').href = link;
+    return link;
+}
+
 async function getDailyChallenge() {
     try {
             const response = await fetch(baseURI + '/daily-challenge');
@@ -26,12 +35,10 @@ async function getDailyChallenge() {
 
 async function getRandomQuestion() {
 
-    const form = document.forms.myForm;
-    const checked = form.querySelector('input[name=flexRadioDefault]:checked');
-    const difficulty = checked.value;
+    const linkBasedOnDifficulty = getLinkBasedOnDifficulty();
 
     try {
-            const response = await fetch(baseURI + '/random-question/' + difficulty);
+            const response = await fetch(linkBasedOnDifficulty);
 
             if (!response.ok) {
                 throw new Error(`Error! status: ${response.status}`);
