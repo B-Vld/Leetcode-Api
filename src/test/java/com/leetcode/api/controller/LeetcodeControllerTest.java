@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LeetcodeController.class)
-public class LeetcodeControllerTest {
+class LeetcodeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -59,7 +59,7 @@ public class LeetcodeControllerTest {
         when(randomQuestionService.fetchRandomQuestionByDifficulty(Difficulty.EASY))
                 .thenReturn(Optional.of(mockQuestion()));
 
-        MvcResult mvcResult = mockMvc.perform(get(String.format("/api/random-question/%s", Difficulty.EASY.getDifficulty())))
+        MvcResult mvcResult = mockMvc.perform(get(String.format("/api/random-question/%s", Difficulty.EASY.getValue())))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(containsString("dummyId")))
                 .andReturn();
@@ -75,7 +75,7 @@ public class LeetcodeControllerTest {
                 .thenReturn(Optional.of(mockQuestionSet()));
 
         MvcResult mvcResult = mockMvc.perform(
-                        post(String.format("/api/random-question/%s", Difficulty.EASY.getDifficulty()))
+                        post(String.format("/api/random-question/%s", Difficulty.EASY.getValue()))
                                 .content(mapper.writeValueAsString(tags))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))

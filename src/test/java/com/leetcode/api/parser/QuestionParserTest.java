@@ -9,8 +9,7 @@ import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-public class QuestionParserTest {
+class QuestionParserTest {
 
     @Mock
     private ObjectMapper mapper;
@@ -25,7 +24,7 @@ public class QuestionParserTest {
     }
 
     @Test
-    public void test_parser() throws JsonProcessingException {
+    void test_parser() throws JsonProcessingException {
         var questionRequest = "{\"questionId\":\"29\",\"acRate\":17.410095866602436,\"difficulty\":\"Medium\",\"title\":\"DivideTwoIntegers\",\"submitUrl\":\"/problems/divide-two-integers/submit/\",\"topicTags\":[{\"name\":\"Math\"},{\"name\":\"BitManipulation\"}],\"likes\":3059,\"dislikes\":10568}";
         var jsonNode = mapper.readTree(questionRequest);
 

@@ -11,10 +11,10 @@ public enum Difficulty {
     MEDIUM("MEDIUM"),
     HARD("HARD");
 
-    private final String difficulty;
+    private final String value;
 
     Difficulty(String difficulty) {
-        this.difficulty = difficulty;
+        this.value = difficulty;
     }
 
     public static Difficulty of(String str) {
@@ -23,7 +23,7 @@ public enum Difficulty {
         } else {
             var strUpper = str.toUpperCase(Locale.ROOT);
             for (var item : Difficulty.values()) {
-                if (strUpper.equals(item.getDifficulty())) {
+                if (strUpper.equals(item.getValue())) {
                     return item;
                 }
             }
@@ -32,7 +32,7 @@ public enum Difficulty {
     }
 
     @JsonValue
-    public String getDifficulty() {
-        return difficulty;
+    public String getValue() {
+        return value;
     }
 }

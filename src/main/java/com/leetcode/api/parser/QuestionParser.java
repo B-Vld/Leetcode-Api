@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @Component
 public class QuestionParser {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(QuestionParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuestionParser.class);
 
     public Question parseNodeToQuestion(JsonNode jsonNode) {
         LOGGER.info("Parsing the json node to a Question object");

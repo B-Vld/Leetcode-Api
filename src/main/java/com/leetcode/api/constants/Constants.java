@@ -20,12 +20,12 @@ public final class Constants {
     private Constants() {
     }
 
-    public static String QUERY_RANDOM_PROBLEM(Difficulty difficulty) {
-        return String.format("{\"query\":\"query randomQuestion($categorySlug: String, $filters: QuestionListFilterInput) { randomQuestion(categorySlug: $categorySlug, filters: $filters) { title questionId difficulty likes dislikes submitUrl topicTags { name } acRate } } \",\"variables\":{ \"categorySlug\":\"\", \"filters\":{ \"difficulty\":\"%s\" } }}", difficulty.getDifficulty());
+    public static String queryRandomProblem(Difficulty difficulty) {
+        return String.format("{\"query\":\"query randomQuestion($categorySlug: String, $filters: QuestionListFilterInput) { randomQuestion(categorySlug: $categorySlug, filters: $filters) { title questionId difficulty likes dislikes submitUrl topicTags { name } acRate } } \",\"variables\":{ \"categorySlug\":\"\", \"filters\":{ \"difficulty\":\"%s\" } }}", difficulty.getValue());
     }
 
-    public static String QUERY_RANDOM_PROBLEM_TAGS(Difficulty difficulty, Set<String> tags) {
-        return String.format("{\"query\":\"query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) { problemsetQuestionList: questionList( categorySlug: $categorySlug limit: $limit skip: $skip filters: $filters ) { total: totalNum questions: data { questionId title submitUrl difficulty acRate topicTags { name } likes dislikes } } } \",\"variables\":{ \"categorySlug\":\"\", \"filters\":{ \"difficulty\":\"%s\", \"tags\":[\"%s\"] } }}", difficulty.getDifficulty(), tags.toString());
+    public static String queryRandomProblemTags(Difficulty difficulty, Set<String> tags) {
+        return String.format("{\"query\":\"query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) { problemsetQuestionList: questionList( categorySlug: $categorySlug limit: $limit skip: $skip filters: $filters ) { total: totalNum questions: data { questionId title submitUrl difficulty acRate topicTags { name } likes dislikes } } } \",\"variables\":{ \"categorySlug\":\"\", \"filters\":{ \"difficulty\":\"%s\", \"tags\":[\"%s\"] } }}", difficulty.getValue(), tags.toString());
     }
 
 }

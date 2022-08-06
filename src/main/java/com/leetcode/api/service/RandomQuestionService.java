@@ -18,7 +18,7 @@ import java.util.Set;
 @Service
 public class RandomQuestionService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(RandomQuestionService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RandomQuestionService.class);
 
     @Autowired
     private ResponseFetcherService responseFetcherService;
@@ -30,7 +30,7 @@ public class RandomQuestionService {
     private ObjectMapper mapper;
 
     public Optional<Question> fetchRandomQuestionByDifficulty(Difficulty difficulty) {
-        var response = responseFetcherService.fetchResponse(Constants.QUERY_RANDOM_PROBLEM(difficulty));
+        var response = responseFetcherService.fetchResponse(Constants.queryRandomProblem(difficulty));
         if (response.isPresent()) {
             return toRandomQuestion(response.get());
         }
@@ -38,7 +38,7 @@ public class RandomQuestionService {
     }
 
     public Optional<Set<Question>> fetchRandomQuestionByTags(Difficulty difficulty, Set<String> tags) {
-        var response = responseFetcherService.fetchResponse(Constants.QUERY_RANDOM_PROBLEM_TAGS(difficulty, tags));
+        var response = responseFetcherService.fetchResponse(Constants.queryRandomProblemTags(difficulty, tags));
         if (response.isPresent()) {
             return toRandomQuestionsSet(response.get());
         }
@@ -65,8 +65,8 @@ public class RandomQuestionService {
         try {
             var jsonRootNode = mapper.readTree(response);
             var jsonDataNode = jsonRootNode.get("data");
-            var jsonProblemsetQuestionList = jsonDataNode.get("problemsetQuestionList");
-            var jsonQuestions = jsonProblemsetQuestionList.get("questions");
+            var jsonProblemQuestionList = jsonDataNode.get("problemsetQuestionList");
+            var jsonQuestions = jsonProblemQuestionList.get("questions");
 
             var questionSet = new HashSet<Question>();
             for (var questionNode : jsonQuestions) {
