@@ -5,16 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leetcode.api.model.Difficulty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QuestionParserTest {
 
-    @Mock
     private ObjectMapper mapper;
 
-    @Mock
     private QuestionParser sut;
 
     @BeforeEach
