@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'com.leetcode'
@@ -9,6 +10,19 @@ version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/B-Vld/Leetcode-Api"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
 
 java {
